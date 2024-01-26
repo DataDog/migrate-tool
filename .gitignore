@@ -1,0 +1,4 @@
+config.json
+**/*.touched
+migrate
+*.json
