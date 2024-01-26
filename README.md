@@ -27,7 +27,7 @@ Flags:
 Use "migrate [command] --help" for more information about a command.
 ```
 
-The tool requires a configuration file (default `config.json`), with credentials per org.
+The tool **requires a configuration file** (default `config.json`), with credentials per org.
 For instance for an org with ID `3000`:
 ```
 {
@@ -59,6 +59,11 @@ Flags:
 
 Global Flags:
   -c, --config string   Path to the config file (default "config.json")
+```
+
+Example:
+```
+./migrate dump -d my_dashboards.json -m my_monitors.json
 ```
 
 Input files are JSON files with a list of objects to fetch, for instance:
@@ -104,6 +109,11 @@ Global Flags:
   -c, --config string   Path to the config file (default "config.json")
 ```
 
+Example:
+```
+./migrate patch -p ksm-to-core
+```
+
 For any file modified by the `patch` command, a `.touched` file will be created in the same directory.
 It will be used by the `update` command to only update touched files.
 
@@ -141,6 +151,11 @@ Flags:
 
 Global Flags:
   -c, --config string   Path to the config file (default "config.json")
+```
+
+Example:
+```
+./migrate update
 ```
 
 The `update` command will only update files that have been touched by the `patch` command, unless the `-u / --update-all` flag is set.
