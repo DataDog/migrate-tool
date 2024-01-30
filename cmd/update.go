@@ -99,7 +99,7 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 		i++
 
 		// Set proper creds
-		ctx, err = client.DatadogCredentials(ctx, cfg, ref.OrgID)
+		credCtx, err := client.DatadogCredentials(ctx, cfg, ref.OrgID)
 		if err != nil {
 			output.failedPaths = append(output.failedPaths, fmt.Errorf("%w object type: %s, id: %s", err, ref.Type, ref.ID))
 			continue
@@ -116,7 +116,7 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 			dashboard := &datadogV1.Dashboard{}
 			err := json.Unmarshal(content, dashboard)
 
-			_, _, err = dashAPI.UpdateDashboard(ctx, ref.ID, *dashboard)
+			_, _, err = dashAPI.UpdateDashboard(credCtx, ref.ID, *dashboard)
 			if err != nil {
 				err = fmt.Errorf("failed to update dashboard %s, err: %w", ref.ID, err)
 			}
@@ -130,7 +130,7 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 				err = fmt.Errorf("failed to parse monitor ID %s, err: %w", ref.ID, err)
 			}
 
-			_, _, err = monitorsAPI.UpdateMonitor(ctx, int64(intID), datadogV1.MonitorUpdateRequest{
+			_, _, err = monitorsAPI.UpdateMonitor(credCtx, int64(intID), datadogV1.MonitorUpdateRequest{
 				Query:   &monitor.Query,
 				Name:    monitor.Name,
 				Message: monitor.Message,

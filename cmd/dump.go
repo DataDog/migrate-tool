@@ -140,13 +140,13 @@ func dump(ctx context.Context, cfg config.Config, inputFilePath string, baseOutp
 		}
 
 		// Set proper creds
-		ctx, err = client.DatadogCredentials(ctx, cfg, sRef.OrgID)
+		credCtx, err := client.DatadogCredentials(ctx, cfg, sRef.OrgID)
 		if err != nil {
 			output.failedRefs = append(output.failedRefs, fmt.Errorf("%w object type: %s, id: %s", err, objectRef.Type, objectRef.ID))
 			continue
 		}
 
-		obj, err := dumper.dump(ctx, cfg, datadogClient, sRef)
+		obj, err := dumper.dump(credCtx, cfg, datadogClient, sRef)
 		if err != nil {
 			output.failedRefs = append(output.failedRefs, fmt.Errorf("failed to process object from org: %d, type: %s, id: %s: %w", sRef.OrgID, objectRef.Type, objectRef.ID, err))
 			continue
