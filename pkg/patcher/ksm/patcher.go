@@ -26,7 +26,10 @@ func (Patcher) PatchMonitor(_ context.Context, _ config.Config, monitor *datadog
 		if res.err != nil {
 			return false, res.err
 		}
-		monitor.Name = &res.patched
+
+		if res.patched != "" {
+			monitor.Name = &res.patched
+		}
 	}
 
 	if monitor.Message != nil {
@@ -34,7 +37,10 @@ func (Patcher) PatchMonitor(_ context.Context, _ config.Config, monitor *datadog
 		if res.err != nil {
 			return false, res.err
 		}
-		monitor.Message = &res.patched
+
+		if res.patched != "" {
+			monitor.Message = &res.patched
+		}
 	}
 
 	return true, nil
