@@ -111,6 +111,7 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 			continue
 		}
 
+		var processErr error
 		switch ref.Type {
 		case dashboardObjType:
 			dashboard := &datadogV1.Dashboard{}
@@ -118,7 +119,7 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 
 			_, _, err = dashAPI.UpdateDashboard(credCtx, ref.ID, *dashboard)
 			if err != nil {
-				err = fmt.Errorf("failed to update dashboard %s, err: %w", ref.ID, err)
+				processErr = fmt.Errorf("failed to update dashboard %s, err: %w", ref.ID, err)
 			}
 
 		case monitorObjType:
@@ -127,7 +128,7 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 
 			intID, err := strconv.Atoi(ref.ID)
 			if err != nil {
-				err = fmt.Errorf("failed to parse monitor ID %s, err: %w", ref.ID, err)
+				processErr = fmt.Errorf("failed to parse monitor ID %s, err: %w", ref.ID, err)
 			}
 
 			_, _, err = monitorsAPI.UpdateMonitor(credCtx, int64(intID), datadogV1.MonitorUpdateRequest{
@@ -136,16 +137,17 @@ func update(ctx context.Context, cfg config.Config, inputDirectory string, updat
 				Message: monitor.Message,
 			})
 			if err != nil {
-				err = fmt.Errorf("failed to update monitor %s, err: %w", ref.ID, err)
+				processErr = fmt.Errorf("failed to update monitor %s, err: %w", ref.ID, err)
 			}
 
 		default:
-			err = fmt.Errorf("invalid object type: %s", ref.Type)
+			processErr = fmt.Errorf("invalid object type: %s", ref.Type)
 		}
 
-		// Update was successful, we can remove the touched file
-		if err == nil {
+		if processErr == nil {
 			output.updatedPaths = append(output.updatedPaths, path)
+		} else {
+			output.failedPaths = append(output.failedPaths, processErr)
 		}
 	}
 
