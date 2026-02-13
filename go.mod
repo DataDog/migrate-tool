@@ -1,6 +1,6 @@
 module github.com/DataDog/migrate-tool
 
-go 1.21
+go 1.25.7
 
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.21.0
