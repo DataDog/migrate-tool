@@ -1,6 +1,6 @@
 module github.com/DataDog/migrate-tool
 
-go 1.21
+go 1.23
 
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.21.0
@@ -16,5 +16,5 @@ require (
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.10.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
 )
